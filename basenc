@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+# basenc - encode and decode files using basencoding
+# Copyright (C) 2017 Raphael McSinyx
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+from argparse import ArgumentParser
+from sys import stdin, stdout
+
+from basencoding import encode, decode
+
+
+parser = ArgumentParser(description='Encode and decode files using\
+                                     basencoding.')
+parser.add_argument('-v', '--version', action='version',
+                    version='%(prog)s 0.1.0a1')
+parser.add_argument('-i', '--infile', required=False,
+                    help='input file, if not set read standard input')
+parser.add_argument('-o', '--outfile', required=False,
+                    help='output file, if not set read standard output')
+parser.add_argument('-d', '--decode', action='store_true', required=False,
+                    help='decode the data')
+parser.add_argument('-b', '--base', required=False,
+                    help='base system, written in base base + 1 to specify\
+                          letters case of output if needed. If this is not\
+                          set, the base will be picked to ensure data is\
+                          decodable to text in set encoding when decode, and\
+                          picked randomly when encode.')
+parser.add_argument('-e', '--encoding', required=False,
+                    help='set encoding, only useful when base is not set')
+args = parser.parse_args()
+
+instream = open(args.infile, 'rb') if args.infile else stdin.buffer
+outstream = open(args.outfile, 'wb') if args.outfile else stdout.buffer
+if args.base: args.base = args.base.encode()
+if not args.encoding: args.encoding='utf-8'
+if not args.decode: outstream.write(encode(instream.read(), args.base))
+else: outstream.write(decode(instream.read(), args.base, args.encoding))
+instream.close()
+outstream.close()
