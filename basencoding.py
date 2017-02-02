@@ -16,7 +16,7 @@
 
 """Convert byte sequence to integer in multiple bases.
 
-Basically, this encoding treats each byte sequence as base-256 numbers
+Basically, this encoding treats each byte sequence as a base-256 number
 and convert it to another base between 2 and 36.
 """
 
@@ -70,16 +70,17 @@ def encode(data, base=None):
 
     base is a bytes represents base between 2 and 36 that data will be
     basencoded to. If base is in base 10, the cases of returned digits
-    will be chosen randomly, else base would be in base base + 1 and the
-    cases will be the same as the case of base. If base is None, it will
-    be picked randomly between 2 and 36.
+    will be chosen randomly, else base would be in base 36 and the
+    cases will be the same as the case of base (special: lowercase 36 is
+    0 and uppercase is 1). If base is None, it will be picked randomly
+    between 2 and 36.
 
     A newline character will be added to the end of the returning bytes.
     """
     if base is None: base = str(randint(2, 36)).encode()
     if len(base) == 1:
-        case = 0 if base.islower() else 1
-        base = max(i.find(base) for i in DIGITS)
+        case = 0 if base.islower() or base == b'0' else 1
+        base = 36 if base in b'01' else max(i.find(base) for i in DIGITS)
     elif base.isdigit():
         case = -1
         base = int(base)
@@ -134,7 +135,6 @@ def decode(data, base=None, encoding='utf-8'):
                 else: d[i] = _decode_others(data, i).decode(encoding)
             except:
                 pass
-        print(d)
         if not d:
             raise ValueError("data hasn't been encoded using basencoding")
         elif len(d) > 1:

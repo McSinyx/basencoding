@@ -29,15 +29,16 @@ parser.add_argument('-v', '--version', action='version',
 parser.add_argument('-i', '--infile', required=False,
                     help='input file, if not set read standard input')
 parser.add_argument('-o', '--outfile', required=False,
-                    help='output file, if not set read standard output')
+                    help='output file, if not set write standard output')
 parser.add_argument('-d', '--decode', action='store_true', required=False,
                     help='decode the data')
 parser.add_argument('-b', '--base', required=False,
-                    help='base system, written in base base + 1 to specify\
-                          letters case of output if needed. If this is not\
-                          set, the base will be picked to ensure data is\
-                          decodable to text in set encoding when decode, and\
-                          picked randomly when encode.')
+                    help='base system between 2 and 36, written in base 36 to\
+                          specify letters case of output if needed (incase\
+                          base is 36, use 0 for lowercase, 1 for uppercase).\
+                          If this is not set, the base will be picked to\
+                          ensure data is decodable to text in set encoding\
+                          when decode, and picked randomly when encode.')
 parser.add_argument('-e', '--encoding', required=False,
                     help='set encoding, only useful when base is not set')
 args = parser.parse_args()
