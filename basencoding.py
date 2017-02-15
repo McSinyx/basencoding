@@ -59,10 +59,9 @@ def _encode_pow2(data, base, case):
     p = POW2.index(base)
     bufsiz = p // gcd(p, 8)
     start = len(data) % bufsiz
-    b = _encode_others(data[:start], base, case)
-    for i in range(start, len(data), bufsiz):
-        b += _encode_others(data[i:i+bufsiz], base, case).zfill(bufsiz*8//p)
-    return b
+    return (_encode_others(data[:start], base, case) +
+            b''.join(_encode_others(data[i:i+bufsiz], base, case).zfill(bufsiz*8//p)
+                     for i in range(start, len(data), bufsiz)))
 
 
 def encode(data, base=None):
@@ -109,10 +108,9 @@ def _decode_pow2(data, base):
     """
     bufsiz = 8 // gcd(POW2.index(base), 8)
     start = len(data) % bufsiz
-    b = _decode_others(data[:start], base)
-    for i in range(start, len(data), bufsiz):
-        b += _decode_others(data[i:i+bufsiz], base)
-    return b
+    return (_decode_others(data[:start], base) +
+            b''.join(_decode_others(data[i:i+bufsiz], base)
+                     for i in range(start, len(data), bufsiz))
 
 
 def decode(data, base=None, encoding='utf-8'):
