@@ -57,6 +57,9 @@ integer.
                           picked randomly when encode.
     -e ENCODING, --encoding ENCODING
                           set encoding, only useful when base is not set
+                          
+For example::
+
   $ echo 48656c6c6f2C20576f726C64210A | basenc -d
   Hello, World!
   $ basenc -i foobar
