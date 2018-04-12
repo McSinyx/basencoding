@@ -110,7 +110,7 @@ def _decode_pow2(data, base):
     start = len(data) % bufsiz
     return (_decode_others(data[:start], base) +
             b''.join(_decode_others(data[i:i+bufsiz], base)
-                     for i in range(start, len(data), bufsiz))
+                     for i in range(start, len(data), bufsiz)))
 
 
 def decode(data, base=None, encoding='utf-8'):
